@@ -63,6 +63,98 @@ P. S. В качестве дополнения поищите, как можно
 
 Отправьте в личном кабинете студента найденные вами секреты с описанием того, чтобы это могло быть по вашему мнению.
 
+1. Лог файл [log2.txt.tgz](log2.txt).
+```
+Reason: High Entropy
+Date: 2021-01-21 07:14:31
+Hash: 35e200c02503c877d8e619d362ecb69f715b8a2c
+Filepath: service/go.sum
+Branch: origin/master
+Commit: deps: upgrade
+```
+Reason: High Entropy - обнаружена строка с высокой энтропией
+Date: 2021-01-21 07:14:31 - дата коммита
+Hash: 35e200c02503c877d8e619d362ecb69f715b8a2c - хэш коммита
+Filepath: service/go.sum - файл с подозрительным значением, содержащей хеши зависимостей
+Branch: origin/master - ветка, в которой обнаружен коммит
+Commit: deps: upgrade - сообщение коммита
+
+Далее идет текст в виде строк которые выглядят как хэш, являющиеся частью файла go.sum
+
+```
+Reason: High Entropy
+Date: 2021-01-21 07:08:16
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2
+Filepath: service/keys/private.key
+Branch: origin/master
+```
+Reason: High Entropy - обнаружена строка с высокой энтропией
+Date: 2021-01-21 07:08:16 - дата коммита
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2 - хэш коммита
+Filepath: service/keys/private.key - файл с приватным ключем
+Branch: origin/master - ветка, в которой обнаружен коммит
+
+
+Далее идет текст с приватным ключем
+
+```
+Reason: High Entropy
+Date: 2021-01-21 07:08:16
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2
+Filepath: service/keys/public.key
+Branch: origin/master
+Commit: fix(service): cleaned up
+```
+Reason: High Entropy - высокая энтропия
+Date: 2021-01-21 07:08:16 - дата коммита
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2 - хэш коммита
+Filepath: service/keys/public.key - файл с публичным ключем
+Branch: origin/master - ветка
+
+```
+Reason: High Entropy
+Date: 2021-01-21 07:08:16
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2
+Filepath: service/keys/symmetric.key
+Branch: origin/master
+Commit: fix(service): cleaned up
+```
+
+Reason: High Entropy - высокая энтропия
+Date: 2021-01-21 07:08:16 - дата коммита
+Hash: d3d5d23e9b64d4c74ca66526b953afa2036391a2 - хэш коммита
+Filepath: service/keys/symmetric.key - симметричный ключ шифрования
+Branch: origin/master - ветка
+Commit: fix(service): cleaned up
+
+```
+Reason: High Entropy
+Date: 2021-01-21 07:06:57
+Hash: 357116ea59d9d0d4cfe8bed75c09da0f3ee99b2a
+Filepath: service/docker-entrypoint-initdb.d/01_data.sql
+Branch: origin/master
+Commit: feat(service): symmetric version added
+```
+
+Filepath: service/docker-entrypoint-initdb.d/01_data.sql - содержит логин пароль к базе данных
+
+```
+Reason: High Entropy
+Date: 2021-01-21 07:06:57
+Hash: 357116ea59d9d0d4cfe8bed75c09da0f3ee99b2a
+Filepath: service/go.sum
+Branch: origin/master
+Commit: feat(service): symmetric version added
+```
+
+Аналогично п. 1
+
+Далее идут опять приватный, публичный ключи, и симметричный ключ
+
+
+
+
+
 ### Дополнительно
 
 Можете дополнительно ознакомиться со сравнением коммерческого сервиса [GitGuardian c truffleHog](https://www.gitguardian.com/gitguardian-vs-trufflehog-alternatives).
