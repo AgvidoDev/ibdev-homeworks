@@ -173,9 +173,82 @@ docker-compose run maven mvn -f /app sonar:sonar \
 
 ### Результаты выполнения
 
+![](001_02.jpg)
 Отправьте в личном кабинете студента ответы на следующие вопросы:
 1. Какие баги были выявлены: количество, описание, почему SonarQube их считает багами? См. ссылку `Why is this an issue?`.
+Выявлен один баг.
+```
+ private static void initDb(Connection conn, boolean clean) {
+    clean = true;
+```
+Introduce a new variable instead of reusing the parameter "clean".
+Параметр clean перезаписывается внутри метода, что может привести к путанице. Это нарушение принципов чистого кода
+
 1. Какие уязвимости были выявлены: количество, категории, описание, почему SonarQube их считает уязвимостями?
+Выявлена одна уязвимость
+```
+ private static Connection getConnection() throws SQLException {
+    return DriverManager.getConnection("jdbc:h2:~/h2.db", "sa", "");
+```
+Использование пустого пароля для доступа к базе данных считается серьезной уязвимостью
+
 1. Какие Security Hotspots были выявлены: количество, категории, приоритет, описание, почему SonarQube их считает Security HotSpot'ами?
+Выявлен один Security Hostpots:
+```
+      server.start();
+      Runtime.getRuntime().addShutdownHook(new Thread(server::shutdown));
+      Thread.currentThread().join();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+```
+Связана с использованием Runtime.getRuntime().addShutdownHook
+Добавление shutdown hook может привести к утечке ресурсов, если хук не будет корректно удален или если он будет выполнять операции, которые могут заблокировать завершение работы приложения
+Если злоумышленник получит возможность добавить свой собственный shutdown hook, он может выполнить вредоносный код при завершении работы приложения
+Shutdown hooks выполняются в неопределенном порядке, что может привести к непредсказуемому поведению
+Исключения выводятся в стандартный поток ошибок (e.printStackTrace()), что может быть недостаточно для корректной обработки ошибок.
+
+Приоритет низкий
+
 1. К каким CWE идёт отсылка для Security Hotspots из п. 2? См. вкладку `How can you fix it?` в нижней части страницы.
+
+CWE-521 - Weak Password Requirements
+
 1. Какие запахи кода были выявлены: количество, описание, почему SonarQube их считает запахами кода? См. ссылку `Why is this an issue?`.
+
+Выявлено 5 Code Smell:
+```
+import java.io.IOException;
+```
+Импорт java.io.IOException не используется в коде. Это классический пример неиспользуемого импорта
+
+
+```
+ final var authorization = request.getAuthorization();
+          System.out.println(authorization);
+```
+Используется System.out.println для вывода информации. Это нарушает рекомендации по написанию качественного кода
+
+```
+  private static void initDb(Connection conn, boolean clean) {
+    clean = true;
+    try (
+        final var stmt = conn.createStatement();
+    ) {
+      if (clean) {
+```
+Переменной clean явно присваивается true а потом зачем то проверяется условие. Код в данном случае с if бессмыслен
+
+```
+catch (SQLException e) {
+      throw new RuntimeException(e);
+```
+
+Используется универсальное исключение (RuntimeException) вместо специализированного исключения. Это нарушает рекомендации по написанию качественного и поддерживаемого кода.
+
+```
+catch (SQLException e) {
+      throw new RuntimeException(e);
+```
+Аналогично
